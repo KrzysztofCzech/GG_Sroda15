@@ -45,17 +45,20 @@ def make_right_side_nodes_and_edges(unique_id : int, coords: tuple[list, list], 
     y = coords[1]
 
 
-    parent_node = Node(id = unique_id, label='i', x=(x[0] + x[1] + x[2]) /3, y=(y[0] + y[1] + y[2])/3, level = level+1)
+    parent_node = Node(id = unique_id, label='i', x=(x[0] + x[1] + x[2]) /3, y=(y[0] + y[1] + y[2])/3, level = level)
     right_nodes = [
         Node(id = 1, label='I', x=(x[1] + x[2] + x[3]) /3, y=(y[1] + y[2] + y[3]) / 3, level = level+1 ),
         Node(id = 2, label='I',x=(x[0] + x[1] + x[2]) /3, y=(y[0] + y[1] + y[2])*2 / 7, level = level+1),
-        Node(id = 3, label='E', x=x[3], y=y[3], level = level+1)
+        Node(id = 3, label='E', x=x[0], y=y[0], level = level+1),
+        Node(id = 4, label='E', x=x[1], y=y[1], level = level+1),
+        Node(id = 5, label='E', x=x[2], y=y[2], level = level+1),
+        Node(id = 6, label='E', x=x[3], y=y[3], level = level+1)
     ]
 
     nodes = [parent_node] + right_nodes
 
     edges = [
-        (unique_id, 1), (unique_id, 2), (unique_id+3,unique_id+1), (unique_id+3,3), (unique_id+3,1), (unique_id+1,unique_id+2), (unique_id+1,3), (unique_id+1,2), (unique_id+2,1), (unique_id+2,2), (unique_id+2,3), (3,1), (3,2),
+        (unique_id, 1), (unique_id, 2), (3,4), (3,6), (4,1), (4,5), (4,6), (4,2), (5,1), (5,2), (5,6), (6,1), (6,2),
     ]
           
 
