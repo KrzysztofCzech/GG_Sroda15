@@ -5,7 +5,7 @@ def compare_nodes(node1, node2):
     return node1[Attr_MAP.label] == node2[Attr_MAP.label] and node1[Attr_MAP.level] == node2[Attr_MAP.level]
 
 # find graphs on which production can be made and inversed result form GraphMatcher
-def find_isomorphic_graph(graph: nx.Graph, left_side_graph: nx.Graph) -> dict:
+def find_isomorphic_graph(graph: nx.Graph, left_side_graph: nx.Graph, selector = lambda x: x[0]) -> dict:
     isomorphic_g = []
 
     graphs_found = nx.algorithms.isomorphism.GraphMatcher(
@@ -17,7 +17,7 @@ def find_isomorphic_graph(graph: nx.Graph, left_side_graph: nx.Graph) -> dict:
         inversed = {v: k for k, v in graph.items()}
         isomorphic_g.append(inversed)
     try:
-        return isomorphic_g[0]
+        return selector(isomorphic_g)
     except IndexError as e:
         print('No isomorphic graph found')
         raise e
