@@ -2,7 +2,6 @@ import networkx as nx
 from classes import Node, Attr_MAP
 from utils import find_isomorphic_graph, update_graph
 
-WIP=123
 
 def make_left_side_graph(uid: int, level) -> nx.Graph:
     left_side_graph = nx.Graph()
