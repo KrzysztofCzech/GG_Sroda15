@@ -52,8 +52,8 @@ def update_x_y_coords(graph: nx.Graph, mapping: dict) -> tuple[list, list]:
     y_coords = []
     for _, node in mapping.items():
         if graph.nodes[node][Attr_MAP.label] == 'E':
-            x_coords.append(graph.nodes[node][Attr_MAP.x] + 50)
-            y_coords.append(graph.nodes[node][Attr_MAP.y] + 50)
+            x_coords.append(graph.nodes[node][Attr_MAP.x])
+            y_coords.append(graph.nodes[node][Attr_MAP.y])
 
     return x_coords, y_coords
 
