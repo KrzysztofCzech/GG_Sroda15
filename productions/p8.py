@@ -1,6 +1,7 @@
 import networkx as nx
-from classes import Node, Attr_MAP
-from utils import find_isomorphic_graph, update_graph
+from classes import Node
+from utils import find_isomorphic_graph
+from draw import draw_unmerged_graph
 
 
 def make_mock_graph(uid: int, level) -> nx.Graph:
@@ -11,7 +12,7 @@ def make_mock_graph(uid: int, level) -> nx.Graph:
     ])
 
     left_side_graph.add_edges_from([
-        (0, 5), (0, 6)
+        (uid, uid+5), (uid, uid+6)
     ])
 
     left_side_graph.add_nodes_from([
@@ -24,9 +25,9 @@ def make_mock_graph(uid: int, level) -> nx.Graph:
     ])
 
     left_side_graph.add_edges_from([
-        (1, 2), (1, 3), (1, 4), (1, 5),
-        (1, 6), (2, 3), (2, 6), (3, 6),
-        (3, 5), (3, 4), (4, 5)
+        (uid+1, uid+2), (uid+1, uid+3), (uid+1, uid+4), (uid+1, uid+5),
+        (uid+1, uid+6), (uid+2, uid+3), (uid+2, uid+6), (uid+3, uid+6),
+        (uid+3, uid+5), (uid+3, uid+4), (uid+4, uid+5)
     ])
 
     level_shift = 60
@@ -36,9 +37,6 @@ def make_mock_graph(uid: int, level) -> nx.Graph:
         Node(id=uid+8, label='E', x=level_shift+60, y=level_shift+0, level=level+2).graph_adapter(),
         Node(id=uid+9, label='E', x=level_shift+60, y=level_shift+30, level=level+2).graph_adapter(),
         Node(id=uid+10, label='E', x=level_shift+0, y=level_shift+30, level=level+2).graph_adapter(),
-
-        # Node(id=uid+11, label='E', x=level_shift+35, y=level_shift+15, level=level+2).graph_adapter(),
-        # Node(id=uid+12, label='E', x=level_shift+25, y=level_shift+15, level=level+2).graph_adapter(),
 
         Node(id=uid+11, label='E', x=level_shift + 30, y=level_shift + 15, level=level+2).graph_adapter(),
         Node(id=uid+12, label='E', x=level_shift + 30, y=level_shift + 15, level=level+2).graph_adapter(),
@@ -50,14 +48,14 @@ def make_mock_graph(uid: int, level) -> nx.Graph:
     ])
 
     left_side_graph.add_edges_from([
-        (7, 10), (7, 16), (7, 11), (7, 12), (7, 13), (7, 8),
-        (8, 13), (8, 11), (8, 14), (8, 9),
-        (9, 14), (9, 11), (9, 12), (9, 15), (9, 10),
-        (10, 16), (10, 15), (10, 12),
-        (16, 12), (15, 12), (14, 11), (13, 11),
+        (uid+7, uid+10), (uid+7, uid+16), (uid+7, uid+11), (uid+7, uid+12), (uid+7, uid+13), (uid+7, uid+8),
+        (uid+8, uid+13), (uid+8, uid+11), (uid+8, uid+14), (uid+8, uid+9),
+        (uid+9, uid+14), (uid+9, uid+11), (uid+9, uid+12), (uid+9, uid+15), (uid+9, uid+10),
+        (uid+10, uid+16), (uid+10, uid+15), (uid+10, uid+12),
+        (uid+16, uid+12), (uid+15, uid+12), (uid+14, uid+11), (uid+13, uid+11),
 
-        (5, 15), (5, 16),
-        (6, 13), (6, 14)
+        (uid+5, uid+15), (uid+5, uid+16),
+        (uid+6, uid+13), (uid+6, uid+14)
     ])
 
     return left_side_graph
@@ -67,11 +65,11 @@ def make_left_side_graph(uid: int, level) -> nx.Graph:
     left_side_graph = nx.Graph()
 
     left_side_graph.add_nodes_from([
-        Node(id=uid, label='el', x=-15, y=-15, level=level).graph_adapter()
+        Node(id=uid, label='el', level=level).graph_adapter()
     ])
 
     left_side_graph.add_edges_from([
-        (0, 5), (0, 6)
+        (uid, uid+5), (uid, uid+6)
     ])
 
     left_side_graph.add_nodes_from([
@@ -84,21 +82,16 @@ def make_left_side_graph(uid: int, level) -> nx.Graph:
     ])
 
     left_side_graph.add_edges_from([
-        (1, 2), (1, 3), (1, 4), (1, 5),
-        (1, 6), (2, 3), (2, 6), (3, 6),
-        (3, 5), (3, 4), (4, 5)
+        (uid+1, uid+2), (uid+1, uid+3), (uid+1, uid+4), (uid+1, uid+5),
+        (uid+1, uid+6), (uid+2, uid+3), (uid+2, uid+6), (uid+3, uid+6),
+        (uid+3, uid+5), (uid+3, uid+4), (uid+4, uid+5)
     ])
-
-    level_shift = 60
 
     left_side_graph.add_nodes_from([
         Node(id=uid+7, label='E', level=level+2).graph_adapter(),
         Node(id=uid+8, label='E', level=level+2).graph_adapter(),
         Node(id=uid+9, label='E', level=level+2).graph_adapter(),
         Node(id=uid+10, label='E', level=level+2).graph_adapter(),
-
-        # Node(id=uid+11, label='E', level=level+2).graph_adapter(),
-        # Node(id=uid+12, label='E', level=level+2).graph_adapter(),
 
         Node(id=uid+11, label='E', level=level+2).graph_adapter(),
         Node(id=uid+12, label='E', level=level+2).graph_adapter(),
@@ -110,14 +103,14 @@ def make_left_side_graph(uid: int, level) -> nx.Graph:
     ])
 
     left_side_graph.add_edges_from([
-        (7, 10), (7, 16), (7, 11), (7, 12), (7, 13), (7, 8),
-        (8, 13), (8, 11), (8, 14), (8, 9),
-        (9, 14), (9, 11), (9, 12), (9, 15), (9, 10),
-        (10, 16), (10, 15), (10, 12),
-        (16, 12), (15, 12), (14, 11), (13, 11),
+        (uid+7, uid+10), (uid+7, uid+16), (uid+7, uid+11), (uid+7, uid+12), (uid+7, uid+13), (uid+7, uid+8),
+        (uid+8, uid+13), (uid+8, uid+11), (uid+8, uid+14), (uid+8, uid+9),
+        (uid+9, uid+14), (uid+9, uid+11), (uid+9, uid+12), (uid+9, uid+15), (uid+9, uid+10),
+        (uid+10, uid+16), (uid+10, uid+15), (uid+10, uid+12),
+        (uid+16, uid+12), (uid+15, uid+12), (uid+14, uid+11), (uid+13, uid+11),
 
-        (5, 15), (5, 16),
-        (6, 13), (6, 14)
+        (uid+5, uid+15), (uid+5, uid+16),
+        (uid+6, uid+13), (uid+6, uid+14)
     ])
 
     return left_side_graph
@@ -163,27 +156,13 @@ def merge_nodes(unique_id: int, graph: nx.Graph):
     graph.remove_node(node_to_remove_key)
 
 
-def make_right_side_nodes_and_edges(unique_id: int, coords: tuple[list, list], level) -> tuple[list[Node], list, Node]:
-    x, y = coords
-
-
-def update_x_y_coords(graph: nx.Graph, mapping: dict) -> tuple[list, list]:
-    x_coords = []
-    y_coords = []
-    for _, node in mapping.items():
-        if graph.nodes[node][Attr_MAP.label] == 'E':
-            x_coords.append(graph.nodes[node][Attr_MAP.x])
-            y_coords.append(graph.nodes[node][Attr_MAP.y])
-
-    return x_coords, y_coords
-
-
 def p8(graph: nx.Graph, level: int):
     unique_id = 555
     left_graph = make_left_side_graph(unique_id, level)
     isomorphic_mapping = find_isomorphic_graph(graph, left_graph)
-    merge_nodes(unique_id, graph)
-    # right_side_nodes, right_side_edges, right_unique_node = make_right_side_nodes_and_edges(
-    #     unique_id, update_x_y_coords(graph, isomorphic_mapping), level)
-    # update_graph(graph, isomorphic_mapping, right_unique_node,
-    #              right_side_nodes, right_side_edges)
+    isomorphic_entry_node_id = isomorphic_mapping[unique_id]
+
+    # drawing graph before production affects final result picture
+    # draw_unmerged_graph(graph, isomorphic_entry_node_id, 'p8_unmerged_graph')
+
+    merge_nodes(isomorphic_entry_node_id, graph)

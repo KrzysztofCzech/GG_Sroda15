@@ -27,10 +27,11 @@ if __name__ == '__main__':
     # draw_graph(graph, name='production2')
 
     # Production 7
+    # TODO
 
     # Production 8
-    # graph = nx.Graph()
-    left_side_graph = p8.make_mock_graph(0, 0)
-    p8.merge_nodes(0, left_side_graph)
-    draw_graph(left_side_graph, name='prod8_WIP')
+    graph = p8.make_mock_graph(0, 0)
+    # draw_graph(graph, name='base_graph_p8')  # drawing graph before production affects final result picture
+    p8.p8(graph, 0)
+    draw_graph(graph, name='production8')
 
