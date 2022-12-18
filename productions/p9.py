@@ -38,9 +38,11 @@ def update_x_y_coords(graph: nx.Graph, mapping: dict) -> tuple[list, list]:
 def make_right_side_nodes_and_edges(unique_id: int, coords: tuple[list, list], level) -> tuple[list[Node], list, Node]:
     x, y = coords
 
-    parent_node = Node(id=unique_id, label='i', x=(x[0] + x[1] + x[2]) / 3, y=(y[0] + y[1] + y[2])/3, level=level+1)
+    parent_node = Node(id=unique_id, label='i', x=(
+        x[0] + x[1] + x[2]) / 3, y=(y[0] + y[1] + y[2])/3, level=level+1)
     right_nodes = [
-        Node(id=1, label='I', x=(x[0] + x[1] + x[2]) / 3, y=(y[0] + y[1] + y[2]) / 3, level=level+1),
+        Node(id=1, label='I', x=(x[0] + x[1] + x[2]) /
+             3, y=(y[0] + y[1] + y[2]) / 3, level=level+1),
         Node(id=2, label='E', x=x[0], y=y[0], level=level+1),
         Node(id=3, label='E', x=x[1], y=y[1], level=level+1),
         Node(id=4, label='E', x=x[2], y=y[2], level=level+1),

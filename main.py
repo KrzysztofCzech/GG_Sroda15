@@ -56,8 +56,9 @@ if __name__ == '__main__':
     # p2(graph, 1)
     # p9(graph, 1)
 
+    print(graph.nodes.data())
     draw_graph(graph, name='production1')
     p10(graph, 0)
 
-    print(graph._node)
+    print(graph.nodes.data())
     draw_graph(graph, name='production2')

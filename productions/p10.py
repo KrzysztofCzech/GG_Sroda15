@@ -1,6 +1,8 @@
 import networkx as nx
 from classes import Node, Attr_MAP
-from utils import find_isomorphic_graph, update_graph
+from utils import find_isomorphic_graph, is_almost_equal, update_graph
+
+unique_id = 500  # id that will be match egde from left side to right side production graph be used must be higher than max number of id used
 
 
 def make_left_side_graph(uid: int, level) -> nx.Graph:
@@ -64,9 +66,11 @@ def make_right_side_nodes_and_edges(unique_id: int, coords: tuple[list, list], l
     print("COORDS")
     print(x, y)
 
-    parent_node = Node(id=unique_id, label='i', x=(x[0] + x[1] + x[2]) / 3, y=(y[0] + y[1] + y[2])/3, level=level+1)
+    parent_node = Node(id=unique_id, label='i', x=(
+        x[0] + x[1] + x[2]) / 3, y=(y[0] + y[1] + y[2])/3, level=level+1)
     right_nodes = [
-        Node(id=1, label='I', x=(x[0] + x[1] + x[2]) / 3, y=(y[0] + y[1] + y[2]) / 3, level=level+1),
+        Node(id=1, label='I', x=(x[0] + x[1] + x[2]) /
+             3, y=(y[0] + y[1] + y[2]) / 3, level=level+1),
         Node(id=2, label='E', x=x[0], y=y[0], level=level+1),
         Node(id=3, label='E', x=x[1], y=y[1], level=level+1),
         Node(id=4, label='E', x=x[2], y=y[2], level=level+1),
@@ -85,16 +89,37 @@ def make_right_side_nodes_and_edges(unique_id: int, coords: tuple[list, list], l
     return right_nodes, edges, parent_node
 
 
-def selector(graphs):
-    print(graphs)
-    return graphs[0]
+def check_if_subgraph_match_p10(found_subgraph, graph: nx.Graph):
+    # vertices 3 and 11 from left side must have the same position
+    if not is_almost_equal(graph.nodes[found_subgraph[unique_id+3]][Attr_MAP.x], graph.nodes[found_subgraph[unique_id+11]][Attr_MAP.x]) \
+            or not is_almost_equal(graph.nodes[found_subgraph[unique_id+3]][Attr_MAP.y], graph.nodes[found_subgraph[unique_id+11]][Attr_MAP.y]):
+        return False
+
+    # vertices 7 and 10 from left side must have the same position
+    if not is_almost_equal(graph.nodes[found_subgraph[unique_id+7]][Attr_MAP.x], graph.nodes[found_subgraph[unique_id+10]][Attr_MAP.x]) \
+            or not is_almost_equal(graph.nodes[found_subgraph[unique_id+7]][Attr_MAP.y], graph.nodes[found_subgraph[unique_id+10]][Attr_MAP.y]):
+        return False
+
+    return True
+
+
+def selector(subgraphs, graph: nx.Graph):
+    subgraphs = [subgraph for subgraph in subgraphs if
+                 check_if_subgraph_match_p10(subgraph, graph)]
+    if (len(subgraphs) == 0):
+        return None
+    return subgraphs[0]
 
 
 def p10(graph: nx.Graph, level):
-    unique_id = 555  # id that will be match egde from left side to right side production graph be used must be higher than max number of id used
+
+    [print(node) for node in graph.nodes.data()]
     left_graph = make_left_side_graph(unique_id, level)
     isomorphic_mapping = find_isomorphic_graph(graph, left_graph, selector)
     right_side_nodes, right_side_edges, right_unique_node = make_right_side_nodes_and_edges(
         unique_id, update_x_y_coords(graph, isomorphic_mapping), level)
+
     update_graph(graph, isomorphic_mapping, right_unique_node,
                  right_side_nodes, right_side_edges)
+
+    [print(node) for node in graph.nodes.data()]
