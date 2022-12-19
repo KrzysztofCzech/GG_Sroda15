@@ -1,26 +1,29 @@
 import networkx as nx
 from classes import Attr_MAP
 
+
 def compare_nodes(node1, node2):
     return node1[Attr_MAP.label] == node2[Attr_MAP.label] and node1[Attr_MAP.level] == node2[Attr_MAP.level]
 
+
 # find graphs on which production can be made and inversed result form GraphMatcher
-def find_isomorphic_graph(graph: nx.Graph, left_side_graph: nx.Graph) -> dict:
+def find_isomorphic_graph(input_graph: nx.Graph, left_side_graph: nx.Graph) -> list[dict]:
     isomorphic_g = []
 
     graphs_found = nx.algorithms.isomorphism.GraphMatcher(
-        graph,
+        input_graph,
         left_side_graph,
         node_match=compare_nodes)
 
     for graph in graphs_found.subgraph_isomorphisms_iter():
         inversed = {v: k for k, v in graph.items()}
         isomorphic_g.append(inversed)
-    try:
-        return isomorphic_g[0]
-    except IndexError as e:
+
+    if len(isomorphic_g) == 0:
         print('No isomorphic graph found')
-        raise e
+    else:
+        return isomorphic_g
+
 
 def update_graph(
     graph: nx.Graph,
@@ -47,7 +50,7 @@ def update_graph(
             right_side_nodes_new[i].id = isomorphic_mapping[right_side_nodes_new[i].id]
 
 
-        
+
 
     right_side_edges_mapped = list(
         map(lambda edge: (right_side_nodes_mapping[edge[0]], right_side_nodes_mapping[edge[1]]), right_side_edges))

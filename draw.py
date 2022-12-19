@@ -49,7 +49,7 @@ def draw_unmerged_graph(graph: nx.Graph, starting_node: int, name: str):
                 node_to_remove = node_2
                 node_to_stay = node_1
 
-    node_to_remove[Attr_MAP.x] = node_to_remove[Attr_MAP.x] - 5
-    node_to_stay[Attr_MAP.x] = node_to_stay[Attr_MAP.x] + 5
+    node_to_remove[Attr_MAP.x] = node_to_remove[Attr_MAP.x] + 5
+    node_to_stay[Attr_MAP.x] = node_to_stay[Attr_MAP.x] - 5
 
     draw_graph(graph_copy, name=name)
