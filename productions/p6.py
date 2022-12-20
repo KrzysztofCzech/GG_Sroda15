@@ -69,10 +69,17 @@ def merge_nodes(unique_id: int, mapping: dict, graph: nx.Graph):
         (unique_id + 12, unique_id + 7),
     ]
     
-    candidate_left = nodes[mapping[unique_id + 6]]
-    candidate_right = nodes[mapping[unique_id + 13]]
+    candidate_left_1 = nodes[mapping[unique_id + 6]]
+    candidate_right_1 = nodes[mapping[unique_id + 13]]
+    candidate_right_2 = nodes[mapping[unique_id + 11]]
     
-    if candidate_left["x"] == candidate_right["x"] and candidate_left["y"] == candidate_right["y"]:
+    candidate_mid = nodes[mapping[unique_id + 12]]
+    
+    if candidate_mid["x"] != (candidate_right_1["x"] + candidate_right_2["x"]) / 2 \
+            or candidate_mid["y"] != (candidate_right_1["y"] + candidate_right_2["y"]) / 2:
+        return    
+    
+    if candidate_left_1["x"] == candidate_right_1["x"] and candidate_left_1["y"] == candidate_right_1["y"]:
         nodes_to_join_list += [
             (unique_id + 6, unique_id + 13),
             (unique_id + 8, unique_id + 11),

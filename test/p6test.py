@@ -250,3 +250,68 @@ class P6Test(unittest.TestCase):
             
         for key, value in graph_copy.edges.items():
             self.assertTrue(graph.has_edge(key[0], key[1]))
+
+    def test_production_wrong_mid_pos(self):
+        graph = nx.Graph()
+        graph.add_nodes_from([
+            Node(id=0, label="i", level=0, x=0.5, y=1.0).graph_adapter(),
+            Node(id=0 + 2, label="i", level=0, x=1.0, y=0.0).graph_adapter(),
+            Node(id=0 + 1, label="E", level=0, x=0.0, y=0.0).graph_adapter(),
+            Node(id=0 + 3, label="E", level=0, x=1.0, y=1.0).graph_adapter(),
+
+            Node(id=0 + 4, label="I", level=0 + 1, x=0.33, y=1.33).graph_adapter(),
+            Node(id=0 + 5, label="I", level=0 + 1, x=0.66, y=1.33).graph_adapter(),
+            Node(id=0 + 6, label="E", level=0 + 1, x=0.0, y=0.0).graph_adapter(),
+            Node(id=0 + 7, label="E", level=0 + 1, x=0.6, y=0.6).graph_adapter(),
+            Node(id=0 + 8, label="E", level=0 + 1, x=1.0, y=1.0).graph_adapter(),
+
+            Node(id=0 + 9, label="I", level=0 + 1, x=0.33, y=-0.33).graph_adapter(),
+            Node(id=0 + 10, label="I", level=0 + 1, x=0.66, y=-0.33).graph_adapter(),
+            Node(id=0 + 11, label="E", level=0 + 1, x=0.0, y=0.0).graph_adapter(),
+            Node(id=0 + 12, label="E", level=0 + 1, x=0.6, y=0.6).graph_adapter(),
+            Node(id=0 + 13, label="E", level=0 + 1, x=1.0, y=1.0).graph_adapter(),
+        ])
+
+        graph.add_edges_from([
+            (0, 0 + 1),
+            (0, 0 + 3),
+            (0 + 2, 0 + 1),
+            (0 + 2, 0 + 3),
+            (0 + 1, 0 + 3),
+
+            (0, 0 + 4),
+            (0, 0 + 5),
+
+            (0 + 2, 0 + 9),
+            (0 + 2, 0 + 10),
+
+            (0 + 4, 0 + 6),
+            (0 + 4, 0 + 7),
+
+            (0 + 5, 0 + 7),
+            (0 + 5, 0 + 8),
+
+            (0 + 6, 0 + 7),
+            (0 + 7, 0 + 8),
+
+            (0 + 9, 0 + 11),
+            (0 + 9, 0 + 12),
+
+            (0 + 10, 0 + 12),
+            (0 + 10, 0 + 13),
+
+            (0 + 11, 0 + 12),
+            (0 + 12, 0 + 13),
+        ])
+
+        graph_copy = graph.copy()
+
+        p6(graph, 0)
+
+        self.assertEqual(len(list(graph.nodes)), 14)
+
+        for node in graph_copy.nodes:
+            self.assertTrue(graph.has_node(node))
+
+        for key, value in graph_copy.edges.items():
+            self.assertTrue(graph.has_edge(key[0], key[1]))
