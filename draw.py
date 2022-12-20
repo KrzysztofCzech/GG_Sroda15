@@ -16,6 +16,7 @@ def draw_graph(graph : nx.Graph, name: str):
     pos = {k:(v[Attr_MAP.x]+3*v[Attr_MAP.level], v[Attr_MAP.y]+4*v[Attr_MAP.level])for k,v in data.items()}
     color_list = [label_color_map[v[Attr_MAP.label]] for k,v in data.items()]
 
+    plt.clf()
     nx.draw_networkx(graph, pos, node_color=color_list)
     ax = plt.gca()
     plt.axis("off")

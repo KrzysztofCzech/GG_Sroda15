@@ -5,6 +5,7 @@ from utils import find_isomorphic_graph, update_graph
 
 def make_left_side_graph(unique_id: int, level) -> nx.Graph:
     left_side_graph = nx.Graph()
+
     left_side_graph.add_nodes_from([
         Node(id=unique_id, label="i", level=level).graph_adapter(),
         Node(id=unique_id + 2, label="i", level=level).graph_adapter(),
@@ -29,7 +30,7 @@ def make_left_side_graph(unique_id: int, level) -> nx.Graph:
         (unique_id, unique_id + 3),
         (unique_id + 2, unique_id + 1),
         (unique_id + 2, unique_id + 3),
-        (unique_id + 1, unique_id + 3), 
+        (unique_id + 1, unique_id + 3),
 
         (unique_id, unique_id + 4),
         (unique_id, unique_id + 5),
@@ -60,79 +61,54 @@ def make_left_side_graph(unique_id: int, level) -> nx.Graph:
     return left_side_graph
 
 
-def update_x_y_coords(graph: nx.Graph, mapping: dict) -> tuple[list, list]:
-    x_coords = []
-    y_coords = []
-    for _, node in mapping.items():
-        if graph.nodes[node][Attr_MAP.label] == 'E':
-            x_coords.append(graph.nodes[node][Attr_MAP.x])
-            y_coords.append(graph.nodes[node][Attr_MAP.y])
+def merge_nodes(unique_id: int, mapping: dict, graph: nx.Graph):
+    adj = graph.adj
+    nodes = graph.nodes
 
-    return x_coords, y_coords
-
-
-def make_right_side_nodes_and_edges(unique_id: int, coords: tuple[list, list], level) -> tuple[list[Node], list, Node]:
-    print(coords)
-    x, y = coords
-
-    parent_node = Node(id=unique_id, label='i', x=(x[0] + x[1] + x[2]) / 3, y=(y[0] + y[1] + y[2]) / 3, level=level + 1)
-    right_nodes = [
-        Node(id=1, label='I', x=(x[0] + x[5] + x[1]) / 3, y=(y[0] + y[1] + y[5]) / 3, level=level + 1),
-        Node(id=2, label='I',
-             x=((x[1] + x[2] + x[3]) / 3) - (((x[1] + x[2] + x[3]) / 3) * 0.1),
-             y=((y[1] + y[2] + y[3]) / 3) + (((y[1] + y[2] + y[3]) / 3) * 0.1),
-             level=level + 1),
-        Node(id=3, label='I',
-             x=((x[2] + x[3] + x[5]) / 3) + (((x[2] + x[3] + x[5]) / 3) * 0.1),
-             y=((y[2] + y[3] + y[5]) / 3) - (((y[2] + y[3] + y[5]) / 3) * 0.1),
-             level=level + 1),
-        Node(id=4, label='I', x=(x[3] + x[4] + x[5]) / 3, y=(y[3] + y[4] + y[5]) / 3, level=level + 1),
-
-        Node(id=5, label='E', x=x[0], y=y[0], level=level + 1),
-        Node(id=7, label='E', x=x[2], y=y[2], level=level + 1),
-        Node(id=9, label='E', x=x[4], y=y[4], level=level + 1),
-
-        Node(id=6, label='E', x=x[1], y=y[1], level=level + 1),
-        Node(id=8, label='E', x=x[3], y=y[3], level=level + 1),
-        Node(id=10, label='E', x=x[5], y=y[5], level=level + 1),
-
+    nodes_to_join_list = [
+        (unique_id + 12, unique_id + 7),
     ]
+    
+    candidate_left = nodes[mapping[unique_id + 6]]
+    candidate_right = nodes[mapping[unique_id + 13]]
+    
+    if candidate_left["x"] == candidate_right["x"] and candidate_left["y"] == candidate_right["y"]:
+        nodes_to_join_list += [
+            (unique_id + 6, unique_id + 13),
+            (unique_id + 8, unique_id + 11),
+        ]
+    else:
+        nodes_to_join_list += [
+            (unique_id + 8, unique_id + 13),
+            (unique_id + 6, unique_id + 11),
+        ]
 
-    edges = [
-        (unique_id, 1),
-        (unique_id, 2),
-        (unique_id, 3),
-        (unique_id, 4),
+    for nodes_to_join in nodes_to_join_list:
+        left_real_id = mapping[nodes_to_join[0]]
+        right_real_id = mapping[nodes_to_join[1]]
 
-        (1, 5),
-        (1, 6),
-        (1, 10),
-        (2, 6),
-        (2, 7),
-        (2, 10),
-        (3, 7),
-        (3, 8),
-        (3, 10),
-        (4, 8),
-        (4, 9),
-        (4, 10),
+        left_node = nodes[left_real_id]
+        right_node = nodes[right_real_id]
 
-        (5, 6),
-        (6, 7),
-        (7, 8),
-        (8, 9),
-        (9, 10),
-        (10, 5),
-    ]
+        same_pos = left_node["x"] == right_node["x"] and left_node["y"] == right_node["y"] and left_node["level"] == right_node["level"]
+        if not same_pos or left_node["label"] != right_node["label"]:
+            return
 
-    return right_nodes, edges, parent_node
+    for nodes_to_join in nodes_to_join_list:
+        left_real_id = mapping[nodes_to_join[0]]
+        right_real_id = mapping[nodes_to_join[1]]
+        
+        lonely_nodes = adj[left_real_id]
+        
+        for lonely_node_id in lonely_nodes:
+            graph.add_edge(right_real_id, lonely_node_id)
+            
+        graph.remove_node(left_real_id)
 
 
 def p6(graph: nx.Graph, level):
     unique_id = 555  # id that will be match egde from left side to right side production graph be used must be higher than max number of id used
     left_graph = make_left_side_graph(unique_id, level)
     isomorphic_mapping = find_isomorphic_graph(graph, left_graph)
-    right_side_nodes, right_side_edges, right_unique_node = make_right_side_nodes_and_edges(
-        unique_id, update_x_y_coords(graph, isomorphic_mapping), level)
-    update_graph(graph, isomorphic_mapping, right_unique_node,
-                 right_side_nodes, right_side_edges)
+
+    merge_nodes(unique_id, isomorphic_mapping, graph)

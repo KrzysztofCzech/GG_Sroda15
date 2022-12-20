@@ -40,7 +40,7 @@ def update_graph(
     for k,v in isomorphic_mapping.items():
         right_side_nodes_mapping[k] = v
 
-    for i in  range(len(right_side_nodes_new)):
+    for i in range(len(right_side_nodes_new)):
         if right_side_nodes_new[i].id not in isomorphic_mapping.keys():
             right_side_nodes_new[i].id = right_side_nodes_new[i].id + n
         else:
