@@ -66,14 +66,6 @@ def make_left_side_graph(uid: int, level) -> nx.Graph:
     left_side_graph = nx.Graph()
 
     left_side_graph.add_nodes_from([
-        Node(id=uid, label='el', level=level).graph_adapter()
-    ])
-
-    left_side_graph.add_edges_from([
-        (uid, uid + 5), (uid, uid + 6)
-    ])
-
-    left_side_graph.add_nodes_from([
         Node(id=uid + 1, label='E', level=level + 1).graph_adapter(),
         Node(id=uid + 3, label='E', level=level + 1).graph_adapter(),
         Node(id=uid + 5, label='i', level=level + 1).graph_adapter(),
@@ -113,17 +105,33 @@ def make_left_side_graph(uid: int, level) -> nx.Graph:
 
 def check_if_subgraph_matches_p8(subgraph: dict, graph: nx.Graph):
     nodes_view = list(subgraph.values())
+    print(nodes_view)
 
     adj = graph._adj
-    nodes = graph._node
+    graph_nodes = graph._node
 
     el_node = adj.get(nodes_view[0])  # lvl 0 (start)
-    i_node_1 = adj.get(list(el_node)[0])  # lvl 1
-    i_node_2 = adj.get(list(el_node)[1])  # lvl 1
-    I_node_1_id = list(i_node_1)[-1]
-    I_node_2_id = list(i_node_2)[-2]
-    I_node_1 = adj.get(I_node_1_id)  # lvl 2
-    I_node_2 = adj.get(I_node_2_id)  # lvl 2
+
+    i_nodes = []
+    for n in nodes_view:
+        if graph_nodes.get(n)['label'] == 'i':
+            i_nodes.append(n)
+
+    i_node_1, i_node_2 = adj.get(i_nodes[0]), adj.get(i_nodes[1])  # lvl 1
+    I_node_1_id, I_node_2_id = None, None
+
+    for n in i_node_1:
+        if n in nodes_view and graph_nodes.get(n)['label'] == 'I':
+            I_node_1_id = n
+            break
+
+    for n in i_node_2:
+        if n in nodes_view and graph_nodes.get(n)['label'] == 'I':
+            I_node_2_id = n
+            break
+
+    I_node_1, I_node_2 = adj.get(I_node_1_id), adj.get(I_node_2_id)  # lvl 2
+
     node_to_remove = None
     node_to_remove_id = None
     node_to_stay = None
@@ -131,19 +139,19 @@ def check_if_subgraph_matches_p8(subgraph: dict, graph: nx.Graph):
     for node_1_id in I_node_1.keys():
         if node_1_id not in nodes_view:
             continue
-        node_1 = nodes.get(node_1_id)
+        node_1 = graph_nodes.get(node_1_id)
         for node_2_id in I_node_2.keys():
             if node_1_id == node_2_id or node_2_id not in nodes_view:
                 continue
-            node_2 = nodes.get(node_2_id)
-            if node_1 == node_2:
+            node_2 = graph_nodes.get(node_2_id)
+            if node_1['label'] == 'E' and node_1 == node_2:
                 common_nodes = list(set(adj.get(node_1_id)).intersection(adj.get(node_2_id)).intersection(nodes_view))
                 print(common_nodes)
-                if len(common_nodes) != 2:
+                if common_nodes and len(common_nodes) != 2:
                     continue
 
-                e_node_1 = nodes.get(common_nodes[0])
-                e_node_2 = nodes.get(common_nodes[1])
+                e_node_1 = graph_nodes.get(common_nodes[0])
+                e_node_2 = graph_nodes.get(common_nodes[1])
 
                 if node_1['x'] != (e_node_1['x'] + e_node_2['x']) / 2 or \
                         node_1['y'] != (e_node_1['y'] + e_node_2['y']) / 2:
