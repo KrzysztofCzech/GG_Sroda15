@@ -17,7 +17,7 @@ class P3Test(unittest.TestCase):
         ])
         graph.add_edges_from([
             (0, 1),
-            (1, 2),
+            (1, 3),
             (2, 3),
             (2, 0),
             (0, 4),
@@ -49,7 +49,7 @@ class P3Test(unittest.TestCase):
 
         expected_edges = [
             (0, 1), (0, 2), (0, 4),
-            (1, 2), (1, 4),
+            (1, 3), (1, 4),
             (2, 3), (2, 4),
             (4, 9), (4, 10),
             (5, 6), (5, 7), (5, 8), (5, 9), (5, 10),
@@ -77,7 +77,7 @@ class P3Test(unittest.TestCase):
         # added few more edges
         graph.add_edges_from([
             (0, 1),
-            (1, 2),
+            (1, 3),
             (2, 3),
             (2, 0),
             (0, 4),
@@ -115,7 +115,7 @@ class P3Test(unittest.TestCase):
 
         expected_edges = [
             (0, 1), (0, 2), (0, 4), (0, -1),
-            (1, 2), (1, 4),
+            (1, 3), (1, 4),
             (2, 3), (2, 4),
             (4, 9), (4, 10),
             (-1, -2), (-2, -3),
@@ -139,7 +139,6 @@ class P3Test(unittest.TestCase):
         ])
         graph.add_edges_from([
             (0, 1),
-            (1, 2),
             (2, 0),
             (0, 4),
             (1, 4),
@@ -150,7 +149,7 @@ class P3Test(unittest.TestCase):
 
         self.assertEqual(False, result)
         self.assertEqual(4, graph.number_of_nodes())
-        self.assertEqual(6, graph.number_of_edges())
+        self.assertEqual(5, graph.number_of_edges())
 
     # 1b, 4c
     def test_without_one_edge_not_applied(self):
@@ -165,7 +164,7 @@ class P3Test(unittest.TestCase):
         # removed (2, 4) edge
         graph.add_edges_from([
             (0, 1),
-            (1, 2),
+            (1, 3),
             (2, 3),
             (2, 0),
             (0, 4),
@@ -191,7 +190,7 @@ class P3Test(unittest.TestCase):
         ])
         graph.add_edges_from([
             (0, 1),
-            (1, 2),
+            (1, 3),
             (2, 3),
             (2, 0),
             (0, 4),
@@ -217,7 +216,7 @@ class P3Test(unittest.TestCase):
         ])
         graph.add_edges_from([
             (0, 1),
-            (1, 2),
+            (1, 3),
             (2, 3),
             (2, 0),
             (0, 4),

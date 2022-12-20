@@ -16,7 +16,7 @@ def make_left_side_graph(uid: int, level) -> nx.Graph:
 
     left_side_graph.add_edges_from([
         (uid, uid + 1),
-        (uid + 1, uid + 2),
+        (uid + 1, uid + 3),
         (uid + 2, uid + 3),
         (uid + 2, uid),
         (uid, uid + 4),
