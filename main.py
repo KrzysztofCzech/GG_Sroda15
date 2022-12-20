@@ -96,7 +96,7 @@ def makeP6():
 
 
 if __name__ == '__main__':
-    makeP6()
-    #makeP5()
+    # makeP6()
+    makeP5()
 
     # print(graph._node)

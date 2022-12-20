@@ -1,37 +1,39 @@
 import networkx as nx
+from typing import Tuple, List
+
 from classes import Node, Attr_MAP
 from utils import find_isomorphic_graph, update_graph
 
 
-def make_left_side_graph(unique_id: int, level) -> nx.Graph:
+def make_left_side_graph(uid: int, level) -> nx.Graph:
     left_side_graph = nx.Graph()
     left_side_graph.add_nodes_from([
-        Node(id=unique_id, label="I", level=level).graph_adapter(),
-        Node(id=unique_id + 1, label="E", level=level).graph_adapter(),
-        Node(id=unique_id + 2, label="E", level=level).graph_adapter(),
-        Node(id=unique_id + 3, label="E", level=level).graph_adapter(),
-        Node(id=unique_id + 4, label="E", level=level).graph_adapter(),
-        Node(id=unique_id + 5, label="E", level=level).graph_adapter(),
-        Node(id=unique_id + 6, label="E", level=level).graph_adapter(),
+        Node(id=uid, label="I", level=level).graph_adapter(),
+        Node(id=uid + 1, label="E", level=level).graph_adapter(),
+        Node(id=uid + 2, label="E", level=level).graph_adapter(),
+        Node(id=uid + 3, label="E", level=level).graph_adapter(),
+        Node(id=uid + 4, label="E", level=level).graph_adapter(),
+        Node(id=uid + 5, label="E", level=level).graph_adapter(),
+        Node(id=uid + 6, label="E", level=level).graph_adapter(),
     ])
 
     left_side_graph.add_edges_from([
-        (unique_id, unique_id + 1),
-        (unique_id, unique_id + 3),
-        (unique_id, unique_id + 5),
+        (uid, uid + 1),
+        (uid, uid + 3),
+        (uid, uid + 5),
 
-        (unique_id + 1, unique_id + 2),
-        (unique_id + 2, unique_id + 3),
-        (unique_id + 3, unique_id + 4),
-        (unique_id + 4, unique_id + 5),
-        (unique_id + 5, unique_id + 6),
-        (unique_id + 6, unique_id + 1),
+        (uid + 1, uid + 2),
+        (uid + 2, uid + 3),
+        (uid + 3, uid + 4),
+        (uid + 4, uid + 5),
+        (uid + 5, uid + 6),
+        (uid + 6, uid + 1),
     ])
 
     return left_side_graph
 
 
-def update_x_y_coords(graph: nx.Graph, mapping: dict) -> tuple[list, list]:
+def update_x_y_coords(graph: nx.Graph, mapping: dict) -> Tuple[list, list]:
     x_coords = []
     y_coords = []
     for _, node in mapping.items():
@@ -42,11 +44,10 @@ def update_x_y_coords(graph: nx.Graph, mapping: dict) -> tuple[list, list]:
     return x_coords, y_coords
 
 
-def make_right_side_nodes_and_edges(unique_id: int, coords: tuple[list, list], level) -> tuple[list[Node], list, Node]:
-    print(coords)
+def make_right_side_nodes_and_edges(uid: int, coords: Tuple[list, list], level) -> Tuple[List[Node], list, Node]:
     x, y = coords
 
-    parent_node = Node(id=unique_id, label='i', x=(x[0] + x[1] + x[2]) / 3, y=(y[0] + y[1] + y[2]) / 3, level=level + 1)
+    parent_node = Node(id=uid, label='i', x=(x[0] + x[1] + x[2]) / 3, y=(y[0] + y[1] + y[2]) / 3, level=level + 1)
     right_nodes = [
         Node(id=1, label='I', x=(x[0] + x[5] + x[1]) / 3, y=(y[0] + y[1] + y[5]) / 3, level=level + 1),
         Node(id=2, label='I',
@@ -70,10 +71,10 @@ def make_right_side_nodes_and_edges(unique_id: int, coords: tuple[list, list], l
     ]
 
     edges = [
-        (unique_id, 1),
-        (unique_id, 2),
-        (unique_id, 3),
-        (unique_id, 4),
+        (uid, 1),
+        (uid, 2),
+        (uid, 3),
+        (uid, 4),
 
         (1, 5),
         (1, 6),
@@ -100,10 +101,10 @@ def make_right_side_nodes_and_edges(unique_id: int, coords: tuple[list, list], l
 
 
 def p5(graph: nx.Graph, level):
-    unique_id = 555  # id that will be match egde from left side to right side production graph be used must be higher than max number of id used
-    left_graph = make_left_side_graph(unique_id, level)
+    uid = 555  # id that will be match egde from left side to right side production graph be used must be higher than max number of id used
+    left_graph = make_left_side_graph(uid, level)
     isomorphic_mapping = find_isomorphic_graph(graph, left_graph)
     right_side_nodes, right_side_edges, right_unique_node = make_right_side_nodes_and_edges(
-        unique_id, update_x_y_coords(graph, isomorphic_mapping), level)
+        uid, update_x_y_coords(graph, isomorphic_mapping), level)
     update_graph(graph, isomorphic_mapping, right_unique_node,
                  right_side_nodes, right_side_edges)
