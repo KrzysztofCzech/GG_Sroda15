@@ -60,33 +60,31 @@ def update_x_y_coords(graph: nx.Graph, mapping: dict) -> tuple[list, list]:
     return x_coords, y_coords
 
 
-def make_right_side_nodes_and_edges(unique_id: int, coords: tuple[list, list], level) -> tuple[list[Node], list, Node]:
-    x, y = coords
+# Merge two nodes in graph, merge edges as well
+def merge_nodes(graph: nx.Graph, node1_id: int, node2_id: int):
+    node1 = graph.nodes[node1_id]
+    node2 = graph.nodes[node2_id]
 
-    print("COORDS")
-    print(x, y)
+    # update node1
+    graph.nodes[node1_id][Attr_MAP.x] = (
+        node1[Attr_MAP.x] + node2[Attr_MAP.x]) / 2
+    graph.nodes[node1_id][Attr_MAP.y] = (
+        node1[Attr_MAP.y] + node2[Attr_MAP.y]) / 2
 
-    parent_node = Node(id=unique_id, label='i', x=(
-        x[0] + x[1] + x[2]) / 3, y=(y[0] + y[1] + y[2])/3, level=level+1)
-    right_nodes = [
-        Node(id=1, label='I', x=(x[0] + x[1] + x[2]) /
-             3, y=(y[0] + y[1] + y[2]) / 3, level=level+1),
-        Node(id=2, label='E', x=x[0], y=y[0], level=level+1),
-        Node(id=3, label='E', x=x[1], y=y[1], level=level+1),
-        Node(id=4, label='E', x=x[2], y=y[2], level=level+1),
-    ]
+    # merge edges
+    for edge in graph.edges(node2_id):
+        if edge[0] == node2_id:
+            graph.add_edge(node1_id, edge[1])
+        else:
+            graph.add_edge(edge[0], node1_id)
 
-    edges = [
-        (unique_id, 1),
-        (1, 2),
-        (1, 3),
-        (1, 4),
-        (2, 3),
-        (2, 4),
-        (3, 4),
-    ]
+    # remove node2
+    graph.remove_node(node2_id)
 
-    return right_nodes, edges, parent_node
+
+def make_right_side_nodes_and_edges(graph: nx.Graph, mapping: dict, uid: int, level: int):
+    merge_nodes(graph, 9, 11)
+    merge_nodes(graph, 7, 10)
 
 
 def check_if_subgraph_match_p10(found_subgraph, graph: nx.Graph):
@@ -116,10 +114,5 @@ def p10(graph: nx.Graph, level):
     [print(node) for node in graph.nodes.data()]
     left_graph = make_left_side_graph(unique_id, level)
     isomorphic_mapping = find_isomorphic_graph(graph, left_graph, selector)
-    right_side_nodes, right_side_edges, right_unique_node = make_right_side_nodes_and_edges(
-        unique_id, update_x_y_coords(graph, isomorphic_mapping), level)
-
-    update_graph(graph, isomorphic_mapping, right_unique_node,
-                 right_side_nodes, right_side_edges)
-
-    [print(node) for node in graph.nodes.data()]
+    make_right_side_nodes_and_edges(
+        graph, isomorphic_mapping, unique_id, level)
