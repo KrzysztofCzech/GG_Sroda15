@@ -35,7 +35,8 @@ class P9Test(unittest.TestCase):
             4: {'label': 'I', 'x': 0.3333333333333333, 'y': 0.3333333333333333, 'level': 1},
             5: {'label': 'E', 'x': 0.0, 'y': 1.0, 'level': 1},
             6: {'label': 'E', 'x': 0.0, 'y': 0.0, 'level': 1},
-            7: {'label': 'E', 'x': 1.0, 'y': 0.0, 'level': 1}}
+            7: {'label': 'E', 'x': 1.0, 'y': 0.0, 'level': 1}
+        }
 
         draw_graph(graph, name='t9_result')
 
