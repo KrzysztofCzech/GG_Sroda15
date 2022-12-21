@@ -32,6 +32,18 @@ class P7Test(unittest.TestCase):
 
         self.assertTrue(len(find_isomorphic_graph(graph, expected_graph)))
 
+    def test_3(self):
+        uid = 50
+        level = 2
+        graph = p7.make_mock_graph(uid, level)
+        graph.remove_node(uid+1) # removing 1 node
+        expected_graph = basic_expected_graph(uid, level)
+
+        p7.p7(graph, level)
+        draw_graph(graph, name='p7_test_3')
+
+        self.assertFalse(find_isomorphic_graph(graph, expected_graph))
+
     def test_4(self):
         uid = 50
         level = 2
@@ -61,7 +73,7 @@ class P7Test(unittest.TestCase):
         level = 0
         graph = p7.make_mock_graph(uid, level)
         nodes = graph._node
-        nodes.get(uid+11)['x'] = 111
+        nodes.get(uid+11)['x'] = 250
         expected_graph = basic_expected_graph(uid, level)
 
         p7.p7(graph, level)
@@ -81,6 +93,19 @@ class P7Test(unittest.TestCase):
         draw_graph(graph, name='p7_test_7')
 
         self.assertFalse(find_isomorphic_graph(graph, expected_graph))
+
+    def test_8(self):
+            uid = 0
+            level = 0
+            graph = p7.make_mock_graph(uid, level)
+            nodes = graph._node
+            nodes.get(uid+7)['label'] = 'I'
+            expected_graph = basic_expected_graph(uid, level)
+
+            p7.p7(graph, level)
+            draw_graph(graph, name='p7_test_8')
+
+            self.assertFalse(find_isomorphic_graph(graph, expected_graph))
 
 
 def basic_expected_graph(uid, level):
