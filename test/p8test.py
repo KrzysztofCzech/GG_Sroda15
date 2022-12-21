@@ -96,6 +96,35 @@ class P8Test(unittest.TestCase):
 
         self.assertFalse(find_isomorphic_graph(graph, expected_graph))
 
+    def test_8(self):
+        uid = 0
+        level = 0
+
+        new_nodes = [
+            Node(id=uid+111, label='i', x=-10, y=10, level=level+1).graph_adapter(),
+            Node(id=uid+222, label='i', x=-25, y=35, level=level+1).graph_adapter(),
+            Node(id=uid+333, label='I', x=85, y=35, level=level+2).graph_adapter(),
+            Node(id=uid+444, label='I', x=40, y=60, level=level+2).graph_adapter(),
+        ]
+
+        new_edges = [
+            (uid+111, uid+5), (uid+222, uid+5),
+            (uid+333, uid+14), (uid+444, uid+16)
+        ]
+
+        graph = p8.make_mock_graph(uid, level)
+        graph.add_nodes_from(new_nodes)
+        graph.add_edges_from(new_edges)
+
+        expected_graph = basic_expected_graph(uid, level)
+        expected_graph.add_nodes_from(new_nodes)
+        expected_graph.add_edges_from(new_edges)
+
+        print(p8.p8(graph, level))
+        draw_graph(graph, name='p8_test_8')
+
+        self.assertTrue(find_isomorphic_graph(graph, expected_graph))
+
 
 def basic_expected_graph(uid, level):
     expected_graph = nx.Graph()
