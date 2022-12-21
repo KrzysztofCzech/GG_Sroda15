@@ -20,3 +20,4 @@ def draw_graph(graph : nx.Graph, name: str):
     ax = plt.gca()
     plt.axis("off")
     plt.savefig(f'./graphs/{name}.png')
+    plt.cla()
