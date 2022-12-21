@@ -194,6 +194,7 @@ def p7(graph: nx.Graph, level: int):
     if transformed_graph is None:
         print("Unsuccessful merging. Cannot continue with the production")
         return None
+
     graph_part1 = transformed_graph
     p8.p8(transformed_graph, level)
     # Returns tuple of graphs: graph with e node merged, graph with middle e node merged 

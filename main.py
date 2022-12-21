@@ -30,8 +30,9 @@ if __name__ == '__main__':
     # Production 7
     graph = p7.make_mock_graph(0, 0)
     # draw_graph(graph, name='base_graph_p8')  # drawing graph before production affects final result picture
-    graph = p7.p7(graph, 0)
-    draw_graph(graph, name='production_ 7_part_2')
+    graph_part_1, graph_part_2  = p7.p7(graph, 0)
+    # draw_graph(graph_part_1, name='production_7_part_1')
+    draw_graph(graph_part_2, name='production_7_part_2')
 
     # Production 8
     # graph = p8.make_mock_graph(0, 0)
