@@ -3,6 +3,7 @@ from draw import draw_graph
 from productions.p1 import p1
 from productions.p2 import p2
 import productions.p8 as p8
+import productions.p7 as p7
 
 from classes import Node, Attr_MAP
 
@@ -27,11 +28,14 @@ if __name__ == '__main__':
     # draw_graph(graph, name='production2')
 
     # Production 7
-    # TODO
+    graph = p7.make_mock_graph(0, 0)
+    # draw_graph(graph, name='base_graph_p8')  # drawing graph before production affects final result picture
+    graph = p7.p7(graph, 0)
+    draw_graph(graph, name='production_ 7_part_2')
 
     # Production 8
-    graph = p8.make_mock_graph(0, 0)
-    # draw_graph(graph, name='base_graph_p8')  # drawing graph before production affects final result picture
-    p8.p8(graph, 0)
-    draw_graph(graph, name='production8')
+    # graph = p8.make_mock_graph(0, 0)
+    # # draw_graph(graph, name='base_graph_p8')  # drawing graph before production affects final result picture
+    # p8.p8(graph, 0)
+    # draw_graph(graph, name='production8')
 
