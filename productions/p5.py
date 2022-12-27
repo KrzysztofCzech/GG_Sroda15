@@ -1,8 +1,7 @@
 import networkx as nx
-from typing import Tuple, List
 
 from classes import Node, Attr_MAP
-from utils import find_isomorphic_graph, update_graph
+from utils import compare_nodes
 
 
 def make_left_side_graph(uid: int, level) -> nx.Graph:
@@ -33,78 +32,89 @@ def make_left_side_graph(uid: int, level) -> nx.Graph:
     return left_side_graph
 
 
-def update_x_y_coords(graph: nx.Graph, mapping: dict) -> Tuple[list, list]:
-    x_coords = []
-    y_coords = []
-    for _, node in mapping.items():
+def check_predicate(graph: nx.Graph, mapping: dict, uid: int) -> bool:
+    tested_nodes = [graph._node[mapping[uid + i]] for i in range(0, 7)]
+
+    x_diff_1 = (tested_nodes[1]['x'] + tested_nodes[3]['x']) * 0.5 - tested_nodes[2]['x']
+    y_diff_1 = (tested_nodes[1]['y'] + tested_nodes[3]['y']) * 0.5 - tested_nodes[2]['y']
+
+    x_diff_2 = (tested_nodes[3]['x'] + tested_nodes[5]['x']) * 0.5 - tested_nodes[4]['x']
+    y_diff_2 = (tested_nodes[3]['y'] + tested_nodes[5]['y']) * 0.5 - tested_nodes[4]['y']
+
+    x_diff_3 = (tested_nodes[1]['x'] + tested_nodes[5]['x']) * 0.5 - tested_nodes[6]['x']
+    y_diff_3 = (tested_nodes[1]['y'] + tested_nodes[5]['y']) * 0.5 - tested_nodes[6]['y']
+
+    return x_diff_1 == 0 and y_diff_1 == 0 and x_diff_2 == 0 and y_diff_2 == 0 and x_diff_3 == 0 and y_diff_3 == 0
+
+
+def make_right_side_nodes_and_edges(graph: nx.Graph, mapping: dict, uid: int, level: int):
+    new_nodes = []
+    parent_node_id = None
+
+    mapping = dict(sorted(mapping.items()))
+
+    for left_node, node in mapping.items():
         if graph.nodes[node][Attr_MAP.label] == 'E':
-            x_coords.append(graph.nodes[node][Attr_MAP.x])
-            y_coords.append(graph.nodes[node][Attr_MAP.y])
+            new_nodes.append({**graph.nodes[node], 'level': level + 1})
+        else:
+            parent_node_id = node
 
-    return x_coords, y_coords
+    new_x = (new_nodes[0]['x'] + new_nodes[1]['x'] + new_nodes[5]['x']) / 3
+    new_y = (new_nodes[0]['y'] + new_nodes[1]['y'] + new_nodes[5]['y']) / 3
+    new_nodes.append({'label': 'I', 'x': new_x, 'y': new_y, 'level': level + 1})
 
+    new_x = (new_nodes[1]['x'] + new_nodes[2]['x'] + new_nodes[5]['x']) / 3
+    new_y = (new_nodes[1]['y'] + new_nodes[2]['y'] + new_nodes[5]['y']) / 3
+    new_nodes.append({'label': 'I', 'x': new_x, 'y': new_y, 'level': level + 1})
 
-def make_right_side_nodes_and_edges(uid: int, coords: Tuple[list, list], level) -> Tuple[List[Node], list, Node]:
-    x, y = coords
+    new_x = (new_nodes[2]['x'] + new_nodes[3]['x'] + new_nodes[5]['x']) / 3
+    new_y = (new_nodes[2]['y'] + new_nodes[3]['y'] + new_nodes[5]['y']) / 3
+    new_nodes.append({'label': 'I', 'x': new_x, 'y': new_y, 'level': level + 1})
 
-    parent_node = Node(id=uid, label='i', x=(x[0] + x[1] + x[2]) / 3, y=(y[0] + y[1] + y[2]) / 3, level=level + 1)
-    right_nodes = [
-        Node(id=1, label='I', x=(x[0] + x[5] + x[1]) / 3, y=(y[0] + y[1] + y[5]) / 3, level=level + 1),
-        Node(id=2, label='I',
-             x=((x[1] + x[2] + x[3]) / 3) - (((x[1] + x[2] + x[3]) / 3) * 0.1),
-             y=((y[1] + y[2] + y[3]) / 3) + (((y[1] + y[2] + y[3]) / 3) * 0.1),
-             level=level + 1),
-        Node(id=3, label='I',
-             x=((x[2] + x[3] + x[5]) / 3) + (((x[2] + x[3] + x[5]) / 3) * 0.1),
-             y=((y[2] + y[3] + y[5]) / 3) - (((y[2] + y[3] + y[5]) / 3) * 0.1),
-             level=level + 1),
-        Node(id=4, label='I', x=(x[3] + x[4] + x[5]) / 3, y=(y[3] + y[4] + y[5]) / 3, level=level + 1),
+    new_x = (new_nodes[4]['x'] + new_nodes[5]['x'] + new_nodes[3]['x']) / 3
+    new_y = (new_nodes[4]['y'] + new_nodes[5]['y'] + new_nodes[3]['y']) / 3
+    new_nodes.append({'label': 'I', 'x': new_x, 'y': new_y, 'level': level + 1})
 
-        Node(id=5, label='E', x=x[0], y=y[0], level=level + 1),
-        Node(id=7, label='E', x=x[2], y=y[2], level=level + 1),
-        Node(id=9, label='E', x=x[4], y=y[4], level=level + 1),
-
-        Node(id=6, label='E', x=x[1], y=y[1], level=level + 1),
-        Node(id=8, label='E', x=x[3], y=y[3], level=level + 1),
-        Node(id=10, label='E', x=x[5], y=y[5], level=level + 1),
-
+    new_edges = [
+        (0, 1), (1, 2), (2, 3), (3, 4), (4, 5), (5, 0),
+        (6, 0), (6, 1), (6, 5),
+        (7, 1), (7, 2), (7, 5),
+        (8, 2), (8, 3), (8, 5),
+        (9, 3), (9, 4), (9, 5),
     ]
 
-    edges = [
-        (uid, 1),
-        (uid, 2),
-        (uid, 3),
-        (uid, 4),
+    offset = max(graph.nodes) + 1
+    graph.add_nodes_from([Node(offset + index, **node).graph_adapter() for index, node in enumerate(new_nodes)])
+    graph.add_edges_from([(edge[0] + offset, edge[1] + offset) for edge in new_edges])
 
-        (1, 5),
-        (1, 6),
-        (1, 10),
-        (2, 6),
-        (2, 7),
-        (2, 10),
-        (3, 7),
-        (3, 8),
-        (3, 10),
-        (4, 8),
-        (4, 9),
-        (4, 10),
+    graph.nodes[parent_node_id]['label'] = 'i'
+    graph.add_edges_from([(parent_node_id, 6 + offset), (parent_node_id, 7 + offset), (parent_node_id, 8 + offset),
+                          (parent_node_id, 9 + offset)])
 
-        (5, 6),
-        (6, 7),
-        (7, 8),
-        (8, 9),
-        (9, 10),
-        (10, 5),
-    ]
 
-    return right_nodes, edges, parent_node
+def find_isomorphic_graph(graph: nx.Graph, left_side_graph: nx.Graph, uid: int) -> dict:
+    isomorphic_g = []
+
+    graphs_found = nx.algorithms.isomorphism.GraphMatcher(
+        graph,
+        left_side_graph,
+        node_match=compare_nodes
+    )
+
+    for g in graphs_found.subgraph_isomorphisms_iter():
+        mapping = {v: k for k, v in g.items()}
+
+        if check_predicate(graph, mapping, uid):
+            isomorphic_g.append(mapping)
+
+    return None if len(isomorphic_g) == 0 else isomorphic_g[0]
 
 
 def p5(graph: nx.Graph, level):
-    uid = 555  # id that will be match egde from left side to right side production graph be used must be higher than max number of id used
+    uid = 555
     left_graph = make_left_side_graph(uid, level)
-    isomorphic_mapping = find_isomorphic_graph(graph, left_graph)
-    right_side_nodes, right_side_edges, right_unique_node = make_right_side_nodes_and_edges(
-        uid, update_x_y_coords(graph, isomorphic_mapping), level)
-    update_graph(graph, isomorphic_mapping, right_unique_node,
-                 right_side_nodes, right_side_edges)
+    isomorphic_mapping = find_isomorphic_graph(graph, left_graph, uid)
+    if isomorphic_mapping is None:
+        return False
+    make_right_side_nodes_and_edges(graph, isomorphic_mapping, uid, level)
+    return True
