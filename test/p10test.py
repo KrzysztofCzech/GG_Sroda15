@@ -621,10 +621,10 @@ class P10Test(unittest.TestCase):
         result = p10(graph, 1)
         draw_graph(graph, name='prod10_8-test_1', level_offset=150)
 
-        print(graph.number_of_nodes())
-        pprint(graph._node)
-        print(graph.number_of_edges())
-        pprint(list(graph.edges()))
+        # print(graph.number_of_nodes())
+        # pprint(graph._node)
+        # print(graph.number_of_edges())
+        # pprint(list(graph.edges()))
 
         self.assertFalse(result)
         self.assertEqual(12, graph.number_of_nodes())
@@ -648,9 +648,23 @@ class P10Test(unittest.TestCase):
         self.assertEqual(expected_nodes, graph._node)
 
         expected_edges = [
-            (0, 1), (0, 2), (0, 3), (1, 2),  (1, 3), (2, 7),
-            (2, 8), (3, 11), (4, 5), (4, 7), (4, 11),
-            (5, 6), (5, 7), (5, 8), (6, 8), (6, 11)
+            (0, 1),
+            (0, 2),
+            (0, 3),
+            (1, 2),
+            (1, 3),
+            (2, 7),
+            (2, 8),
+            (3, 11),
+            (4, 5),
+            (4, 7),
+            (5, 6),
+            (5, 7),
+            (5, 8),
+            (6, 8),
+            (9, 10),
+            (9, 11),
+            (10, 11)
         ]
 
         self.assertEqual(expected_edges, list(graph.edges()))
