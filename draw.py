@@ -7,6 +7,7 @@ label_color_map = {
     "el": "blue",
     "E": "orange",
     "i": "yellow",
+    "L": "pink"
 }
 
 
