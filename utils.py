@@ -5,9 +5,8 @@ from classes import Attr_MAP
 def compare_nodes(node1, node2):
     return node1[Attr_MAP.label] == node2[Attr_MAP.label] and node1[Attr_MAP.level] == node2[Attr_MAP.level]
 
+
 # find graphs on which production can be made and inversed result form GraphMatcher
-
-
 def find_isomorphic_graph(graph: nx.Graph, left_side_graph: nx.Graph) -> dict:
     isomorphic_g = []
 
@@ -24,6 +23,24 @@ def find_isomorphic_graph(graph: nx.Graph, left_side_graph: nx.Graph) -> dict:
     except IndexError as e:
         print('No isomorphic graph found')
         raise e
+
+
+def find_isomorphic_graph_p7_p8(input_graph: nx.Graph, left_side_graph: nx.Graph) -> list[dict]:
+    isomorphic_g = []
+
+    graphs_found = nx.algorithms.isomorphism.GraphMatcher(
+        input_graph,
+        left_side_graph,
+        node_match=compare_nodes)
+
+    for graph in graphs_found.subgraph_isomorphisms_iter():
+        inversed = {v: k for k, v in graph.items()}
+        isomorphic_g.append(inversed)
+
+    if len(isomorphic_g) == 0:
+        print('No isomorphic graph found')
+    else:
+        return isomorphic_g
 
 
 def update_graph(

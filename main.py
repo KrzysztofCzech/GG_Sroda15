@@ -3,7 +3,7 @@ from draw import draw_graph
 from productions.p1 import p1
 from productions.p2 import p2
 
-from classes import Node, Attr_MAP
+from classes import Node
 
 
 if __name__ == '__main__':
