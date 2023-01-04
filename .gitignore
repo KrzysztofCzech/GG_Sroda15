@@ -81,9 +81,6 @@ target/
 profile_default/
 ipython_config.py
 
-# Idea
-.idea
-
 # pyenv
 .python-version
 
@@ -130,5 +127,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# IDE
+.idea
 
 graphs/
