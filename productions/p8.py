@@ -1,6 +1,6 @@
 import networkx as nx
 from classes import Node
-from utils import find_isomorphic_graph
+from utils import find_isomorphic_graph_p7_p8
 
 
 def make_mock_graph(uid: int, level) -> nx.Graph:
@@ -188,7 +188,7 @@ def find_and_merge_nodes(subgraphs, graph: nx.Graph):
 def p8(graph: nx.Graph, level: int):
     unique_id = 555
     left_graph = make_left_side_graph(unique_id, level)
-    isomorphic_mappings = find_isomorphic_graph(graph, left_graph)
+    isomorphic_mappings = find_isomorphic_graph_p7_p8(graph, left_graph)
     is_production_completed = find_and_merge_nodes(isomorphic_mappings, graph)
     print("Merged nodes successfully" if is_production_completed else "No compatible graph found")
 

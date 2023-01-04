@@ -21,8 +21,8 @@ def update_x_y_coords(graph: nx.Graph, mapping: dict) -> tuple[list, list]:
     return x_coords, y_coords
 
 def make_right_side_nodes_and_edges(unique_id : int, coords: tuple[list, list], level) -> tuple[list[Node], list, Node]:
-    upper = 60.0
-    lower = 30.0
+    upper = 30
+    lower = 0
     x = coords[0]
     y = coords [1]
     parent_node = Node(id = unique_id, label='el', x = x[0], y = y[0])

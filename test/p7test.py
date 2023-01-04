@@ -1,7 +1,7 @@
 import unittest
 import networkx as nx
 import productions.p7 as p7
-from utils import find_isomorphic_graph
+from utils import find_isomorphic_graph_p7_p8
 from classes import Node
 from draw import draw_graph
 
@@ -18,7 +18,7 @@ class P7Test(unittest.TestCase):
         expected_graph = basic_expected_graph(0, 0)
         
         p7.p7(graph, 0)
-        self.assertTrue(len(find_isomorphic_graph(graph, expected_graph)))
+        self.assertTrue(len(find_isomorphic_graph_p7_p8(graph, expected_graph)))
 
     def test_2(self):
         uid = 100
@@ -30,7 +30,7 @@ class P7Test(unittest.TestCase):
         p7.p7(graph, level)
         draw_graph(graph, name='p7_test_2')
 
-        self.assertTrue(len(find_isomorphic_graph(graph, expected_graph)))
+        self.assertTrue(len(find_isomorphic_graph_p7_p8(graph, expected_graph)))
 
     def test_3(self):
         uid = 50
@@ -42,7 +42,7 @@ class P7Test(unittest.TestCase):
         p7.p7(graph, level)
         draw_graph(graph, name='p7_test_3')
 
-        self.assertFalse(find_isomorphic_graph(graph, expected_graph))
+        self.assertFalse(find_isomorphic_graph_p7_p8(graph, expected_graph))
 
     def test_4(self):
         uid = 50
@@ -54,7 +54,7 @@ class P7Test(unittest.TestCase):
         p7.p7(graph, level)
         draw_graph(graph, name='p7_test_4')
 
-        self.assertFalse(find_isomorphic_graph(graph, expected_graph))
+        self.assertFalse(find_isomorphic_graph_p7_p8(graph, expected_graph))
 
     def test_5(self):
         uid = 100
@@ -66,7 +66,7 @@ class P7Test(unittest.TestCase):
         p7.p7(graph, level)
         draw_graph(graph, name='p7_test_5')
 
-        self.assertTrue(len(find_isomorphic_graph(graph, expected_graph)))
+        self.assertTrue(len(find_isomorphic_graph_p7_p8(graph, expected_graph)))
 
     def test_6(self):
         uid = 0
@@ -79,7 +79,7 @@ class P7Test(unittest.TestCase):
         p7.p7(graph, level)
         draw_graph(graph, name='p7_test_6')
 
-        self.assertFalse(find_isomorphic_graph(graph, expected_graph))
+        self.assertFalse(find_isomorphic_graph_p7_p8(graph, expected_graph))
 
     def test_7(self):
         uid = 0
@@ -92,7 +92,7 @@ class P7Test(unittest.TestCase):
         p7.p7(graph, level)
         draw_graph(graph, name='p7_test_7')
 
-        self.assertFalse(find_isomorphic_graph(graph, expected_graph))
+        self.assertFalse(find_isomorphic_graph_p7_p8(graph, expected_graph))
 
     def test_8(self):
             uid = 0
@@ -105,7 +105,7 @@ class P7Test(unittest.TestCase):
             p7.p7(graph, level)
             draw_graph(graph, name='p7_test_8')
 
-            self.assertFalse(find_isomorphic_graph(graph, expected_graph))
+            self.assertFalse(find_isomorphic_graph_p7_p8(graph, expected_graph))
 
 
 def basic_expected_graph(uid, level):
