@@ -18,11 +18,8 @@ def find_isomorphic_graph(graph: nx.Graph, left_side_graph: nx.Graph) -> dict:
     for graph in graphs_found.subgraph_isomorphisms_iter():
         inversed = {v: k for k, v in graph.items()}
         isomorphic_g.append(inversed)
-    try:
-        return isomorphic_g[0]
-    except IndexError as e:
-        print('No isomorphic graph found')
-        raise e
+
+    return None if len(isomorphic_g) == 0 else isomorphic_g[0]
 
 
 def find_isomorphic_graph_p7_p8(input_graph: nx.Graph, left_side_graph: nx.Graph) -> list[dict]:
@@ -54,7 +51,7 @@ def update_graph(
     temp_id = right_side_parent_node.id
 
     # print(graph._node[temp_id_mapped])
-    n = len(graph.nodes) - 1
+    n = max(graph.nodes)
 
     right_side_nodes_mapping = {
         node.id: node.id + n for node in right_side_nodes_new}
