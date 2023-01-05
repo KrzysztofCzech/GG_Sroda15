@@ -25,7 +25,7 @@ def make_right_side_nodes_and_edges(unique_id : int, coords: tuple[list, list], 
     lower = 0
     x = coords[0]
     y = coords [1]
-    parent_node = Node(id = unique_id, label='el', x = x[0], y = y[0])
+    parent_node = Node(id = unique_id, label='el', x = x[0], y = y[0], level=level)
     right_nodes = [
         Node(id = 1, label='I', x=(lower*2+upper)/3 + x[0], y=(lower*2+upper)/3 + y[0], level=level+1),
         Node(id = 2, label='I', x=(lower +upper*2)/3 + x[0], y=(lower+upper*2)/3 + y[0], level=level+1),
@@ -47,6 +47,12 @@ def p1(graph: nx.Graph, level):
     unique_id = 555 # id that will be match egde from left side to right side production graph be used must be higher than max number of id used
     left_graph = make_left_side_graph(unique_id, level)
     isomorphic_mapping = find_isomorphic_graph(graph, left_graph)
+
+    if isomorphic_mapping is None:
+        return False
+
     right_side_nodes, right_side_edges, right_unique_node = make_right_side_nodes_and_edges(unique_id,update_x_y_coords(graph, isomorphic_mapping), level)
-    
+
     update_graph(graph, isomorphic_mapping, right_unique_node, right_side_nodes, right_side_edges)
+
+    return True
