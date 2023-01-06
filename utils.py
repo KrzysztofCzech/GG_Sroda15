@@ -75,3 +75,29 @@ def update_graph(
 
 def with_offset(arg: list[tuple[int, int]], offset):
     return [(v1+offset, v2+offset) for (v1, v2) in arg]
+
+
+def almost_equal(a, b, epsilon=0.0001):
+    return abs(a - b) < epsilon
+
+
+def compare_node_pairs_positions(list_of_pairs_ids, tested_nodes):
+    list_of_pairs = [(tested_nodes[i], tested_nodes[j])
+                     for i, j in list_of_pairs_ids]
+
+    for pair in list_of_pairs:
+        x_diff = pair[0]['x'] - pair[1]['x']
+        y_diff = pair[0]['y'] - pair[1]['y']
+        if not almost_equal(x_diff, 0) or not almost_equal(y_diff, 0):
+            return False
+    return True
+
+
+def check_if_is_in_the_middle(left_id, center_id, right_id, tested_nodes):
+    left = tested_nodes[left_id]
+    center = tested_nodes[center_id]
+    right = tested_nodes[right_id]
+
+    x_diff_1 = (left['x'] + right['x']) * 0.5 - center['x']
+    y_diff_1 = (left['y'] + right['y']) * 0.5 - center['y']
+    return almost_equal(x_diff_1, 0) and almost_equal(y_diff_1, 0)
