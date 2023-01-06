@@ -1,4 +1,5 @@
 import copy
+from pprint import pprint
 
 from matplotlib import pyplot as plt
 import networkx as nx
@@ -13,7 +14,16 @@ label_color_map = {
 }
 
 
-def draw_graph(graph: nx.Graph, name: str, level_offset=40, font_size=12, with_coords=False):
+def draw_graph(graph: nx.Graph, name: str, level_offset=40, font_size=12, with_coords=False, level=None):
+
+    graph = copy.deepcopy(graph)
+
+    to_remove = []
+    if level is not None:
+        for node in graph.nodes():
+            if graph.nodes[node][Attr_MAP.level] != level:
+                to_remove.append(node)
+    graph.remove_nodes_from(to_remove)
     data = graph._node
 
     pos = {k: (v[Attr_MAP.x]+level_offset*v[Attr_MAP.level], v[Attr_MAP.y] +

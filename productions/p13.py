@@ -1,6 +1,6 @@
 import networkx as nx
 from classes import Node, Attr_MAP
-from utils import check_if_is_in_the_middle, compare_node_pairs_positions, compare_nodes, with_offset
+from utils import compare_node_pairs_positions, compare_nodes, with_offset
 
 from pprint import pprint
 
@@ -15,13 +15,10 @@ def make_left_side_graph(uid: int, level) -> nx.Graph:
 
         Node(uid + 4, label='E', level=level+1).graph_adapter(),
         Node(uid + 5, label='E', level=level+1).graph_adapter(),
-        Node(uid + 6, label='E', level=level+1).graph_adapter(),
-        Node(uid + 7, label='I', level=level+1).graph_adapter(),
-        Node(uid + 8, label='I', level=level+1).graph_adapter(),
+        Node(uid + 6, label='I', level=level+1).graph_adapter(),
 
-        Node(uid + 9, label='E', level=level+1).graph_adapter(),
-        Node(uid + 10, label='E', level=level+1).graph_adapter(),
-        Node(uid + 11, label='I', level=level+1).graph_adapter(),
+        Node(uid + 7, label='E', level=level+1).graph_adapter(),
+        Node(uid + 8, label='I', level=level+1).graph_adapter(),
     ])
 
     left_side_graph.add_edges_from(with_offset([
@@ -33,27 +30,23 @@ def make_left_side_graph(uid: int, level) -> nx.Graph:
 
         (4, 5),
         (5, 6),
-        (7, 4),
+        (6, 4),
+
         (7, 5),
         (8, 5),
-        (8, 6),
+        (8, 7),
 
-        (9, 10),
-        (10, 11),
-        (9, 11),
-
-        (2, 7),
-        (2, 8),
-        (3, 11)
+        (2, 6),
+        (3, 8),
     ], uid))
 
     return left_side_graph
 
 
 def check_predicate(graph: nx.Graph, mapping: dict, uid: int) -> bool:
-    tested_nodes = [graph._node[mapping[uid + i]] for i in range(0, 11)]
+    tested_nodes = [graph._node[mapping[uid + i]] for i in range(0, 8)]
 
-    return compare_node_pairs_positions([[4, 9], [6, 10], [4, 0], [1, 6]], tested_nodes) and check_if_is_in_the_middle(4, 5, 6, tested_nodes)
+    return compare_node_pairs_positions([[4, 7], [5, 1], [4, 0]], tested_nodes)
 
 
 def find_isomorphic_graph(graph: nx.Graph, left_side_graph: nx.Graph, uid: int) -> dict:
@@ -77,23 +70,18 @@ def find_isomorphic_graph(graph: nx.Graph, left_side_graph: nx.Graph, uid: int) 
 def make_right_side_nodes_and_edges(graph: nx.Graph, mapping: dict, uid: int, level: int):
     new_edges = []
 
-    to_merge_ids_1 = [mapping[uid+4], mapping[uid+9]]
-    to_merge_ids_2 = [mapping[uid+6], mapping[uid+10]]
+    to_merge_ids_1 = [mapping[uid+4], mapping[uid+7]]
 
     mapping = dict(sorted(mapping.items()))
 
     # pprint(mapping)
 
-    # get all edges connected to to_merge_ids_1[1] where the other node is not mapping[uid+10] or mapping[uid+11]
-    edges_to_merge_1 = [edge for edge in graph.edges if edge[0] == to_merge_ids_1[1] and edge[1] != mapping[uid+10] and edge[1] != mapping[uid+11] or
-                        edge[1] == to_merge_ids_1[1] and edge[0] != mapping[uid+10] and edge[0] != mapping[uid+11]]
-
-    # get all edges connected to to_merge_ids_2[1] where the other node is not mapping[uid+10] or mapping[uid+11]
-    edges_to_merge_2 = [edge for edge in graph.edges if edge[0] == to_merge_ids_2[1] and edge[1] != mapping[uid+9] and edge[1] != mapping[uid+11] or
-                        edge[1] == to_merge_ids_2[1] and edge[0] != mapping[uid+9] and edge[0] != mapping[uid+11]]
+    # get all edges connected to to_merge_ids_1[1] where the other node is not mapping[uid+8] or mapping[uid+9]
+    edges_to_merge_1 = [edge for edge in graph.edges if edge[0] == to_merge_ids_1[1] and edge[1] != mapping[uid+8] and edge[1] != mapping[uid+5] or
+                        edge[1] == to_merge_ids_1[1] and edge[0] != mapping[uid+8] and edge[0] != mapping[uid+5]]
 
     # remove nodes to_merge_ids_1[1] and to_merge_ids_2[1]
-    graph.remove_nodes_from([to_merge_ids_1[1], to_merge_ids_2[1]])
+    graph.remove_nodes_from([to_merge_ids_1[1]])
 
     # for each edges in edges_to_merge_1
     for edge in edges_to_merge_1:
@@ -102,20 +90,13 @@ def make_right_side_nodes_and_edges(graph: nx.Graph, mapping: dict, uid: int, le
         else:
             new_edges.append((edge[0], mapping[uid+4]))
 
-    for edge in edges_to_merge_2:
-        if edge[0] == to_merge_ids_2[1]:
-            new_edges.append((mapping[uid+6], edge[1]))
-        else:
-            new_edges.append((edge[0], mapping[uid+6]))
-
-    new_edges.append((mapping[uid+6], mapping[uid+11]))
-    new_edges.append((mapping[uid+4], mapping[uid+11]))
+    new_edges.append((mapping[uid+4], mapping[uid+8]))
 
     graph.add_edges_from([(edge[0], edge[1])
                          for edge in new_edges])
 
 
-def p10(graph: nx.Graph, level) -> bool:
+def p13(graph: nx.Graph, level) -> bool:
     unique_id = 10000
     left_graph = make_left_side_graph(unique_id, level)
     isomorphic_mapping = find_isomorphic_graph(graph, left_graph, unique_id)
