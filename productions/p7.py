@@ -152,7 +152,7 @@ def merge_e_nodes(subgraph: dict, graph: nx.Graph):
             if node_1 == node_2:
                 common_nodes = list(set(adj.get(node_1_id)).intersection(adj.get(node_2_id)).intersection(nodes_view))
 
-                print(f"{common_nodes=}")
+                print(f"{common_nodes}=")
                 # Find two identical e nodes with no common nodes
                 if common_nodes == []:
                     node_to_remove = node_1
