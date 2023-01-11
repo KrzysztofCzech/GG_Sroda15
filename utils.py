@@ -103,3 +103,4 @@ def check_if_is_in_the_middle(left_id, center_id, right_id, tested_nodes):
     x_diff_1 = (left['x'] + right['x']) * 0.5 - center['x']
     y_diff_1 = (left['y'] + right['y']) * 0.5 - center['y']
     return almost_equal(x_diff_1, 0) and almost_equal(y_diff_1, 0)
+
