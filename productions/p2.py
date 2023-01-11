@@ -24,14 +24,32 @@ def make_left_side_graph(unique_id: int, level) -> nx.Graph:
     return left_side_graph
 
 
-def check_predicate(graph: nx.Graph, mapping: dict, uid: int) -> bool:
-    tested_nodes = [graph._node[mapping[uid + i]] for i in range(1, 4)]
+# def check_predicate(graph: nx.Graph, mapping: dict, uid: int) -> bool:
+#     tested_nodes = [graph._node[mapping[uid + i]] for i in range(1, 4)]
+#
+#     edge_1 = ((tested_nodes[0]['x'] - tested_nodes[1]['x']) ** 2 + (tested_nodes[0]['y'] - tested_nodes[1]['y']) ** 2) ** 0.5
+#     edge_2 = ((tested_nodes[1]['x'] - tested_nodes[2]['x']) ** 2 + (tested_nodes[1]['y'] - tested_nodes[2]['y']) ** 2) ** 0.5
+#     edge_3 = ((tested_nodes[0]['x'] - tested_nodes[2]['x']) ** 2 + (tested_nodes[0]['y'] - tested_nodes[2]['y']) ** 2) ** 0.5
+#
+#     return edge_1 >= edge_2 and edge_1 >= edge_3
 
-    edge_1 = ((tested_nodes[0]['x'] - tested_nodes[1]['x']) ** 2 + (tested_nodes[0]['y'] - tested_nodes[1]['y']) ** 2) ** 0.5
-    edge_2 = ((tested_nodes[1]['x'] - tested_nodes[2]['x']) ** 2 + (tested_nodes[1]['y'] - tested_nodes[2]['y']) ** 2) ** 0.5
-    edge_3 = ((tested_nodes[0]['x'] - tested_nodes[2]['x']) ** 2 + (tested_nodes[0]['y'] - tested_nodes[2]['y']) ** 2) ** 0.5
 
-    return edge_1 >= edge_2 and edge_1 >= edge_3
+# def find_isomorphic_graph(graph: nx.Graph, left_side_graph: nx.Graph, uid: int) -> dict:
+#     isomorphic_g = []
+#
+#     graphs_found = nx.algorithms.isomorphism.GraphMatcher(
+#         graph,
+#         left_side_graph,
+#         node_match=compare_nodes
+#     )
+#
+#     for g in graphs_found.subgraph_isomorphisms_iter():
+#         mapping = {v: k for k, v in g.items()}
+#
+#         if check_predicate(graph, mapping, uid):
+#             isomorphic_g.append(mapping)
+#
+#     return None if len(isomorphic_g) == 0 else isomorphic_g[0]
 
 
 def update_x_y_coords(graph: nx.Graph, mapping: dict) -> tuple[list, list]:
