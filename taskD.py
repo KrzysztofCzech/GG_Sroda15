@@ -29,14 +29,19 @@ if __name__ == '__main__':
     draw_graph(graph, name='task-d-03-01-p10', level=2)
     draw_graph(graph, name='task-d-03')
 
-    # p2(graph, 2)
-    # p2(graph, 2)
-    # p3(graph, 2)
-    # draw_graph(graph, name='task-d-04')
-    #
-    # p12(graph, 2)
-    # p12(graph, 2)
-    # draw_graph(graph, name='task-d-05')
+    p2(graph, 2)
+    draw_graph(graph, name='task-d-04-01-p02', level=3)
+    p2(graph, 2)
+    draw_graph(graph, name='task-d-04-02-p02', level=3)
+    p3(graph, 2)
+    draw_graph(graph, name='task-d-04-03-p03', level=3, with_coords=True)
+    draw_graph(graph, name='task-d-04', level=[2,3])
+
+    p12(graph, 2)
+    draw_graph(graph, name='task-d-05-01-p12', level=3)
+    p12(graph, 2)
+    draw_graph(graph, name='task-d-05-02-p12', level=3)
+    draw_graph(graph, name='task-d-05')
     #
     # p7(graph, 3)
     # draw_graph(graph, name='task-d-06')
