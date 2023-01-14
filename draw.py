@@ -1,5 +1,6 @@
 import copy
 from pprint import pprint
+from collections.abc import Iterable
 
 from matplotlib import pyplot as plt
 import networkx as nx
@@ -20,8 +21,14 @@ def draw_graph(graph: nx.Graph, name: str, level_offset=40, font_size=12, with_c
 
     to_remove = []
     if level is not None:
+        level_to_graph = []
+        if isinstance(level, Iterable):
+            level_to_graph = level
+        else:
+            level_to_graph.append(level)
+
         for node in graph.nodes():
-            if graph.nodes[node][Attr_MAP.level] != level:
+            if graph.nodes[node][Attr_MAP.level] not in level_to_graph:
                 to_remove.append(node)
     graph.remove_nodes_from(to_remove)
     data = graph._node

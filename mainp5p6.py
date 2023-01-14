@@ -3,7 +3,7 @@ import networkx as nx
 from classes import Node
 from draw import draw_graph
 from productions.p5 import p5
-from productions.p6 import p6
+from productions.p6prim import p6
 
 
 def makeP5():
@@ -40,10 +40,10 @@ def makeP5():
 def makeP6():
     graph2 = nx.Graph()
     graph2.add_nodes_from([
-        Node(id=0, label="i", level=0, x=0.5, y=1.0).graph_adapter(),
-        Node(id=0 + 2, label="i", level=0, x=1.0, y=0.0).graph_adapter(),
-        Node(id=0 + 1, label="E", level=0, x=0.0, y=0.0).graph_adapter(),
-        Node(id=0 + 3, label="E", level=0, x=1.0, y=1.0).graph_adapter(),
+        # Node(id=0, label="i", level=0, x=0.5, y=1.0).graph_adapter(),
+        # Node(id=0 + 2, label="i", level=0, x=1.0, y=0.0).graph_adapter(),
+        # Node(id=0 + 1, label="E", level=0, x=0.0, y=0.0).graph_adapter(),
+        # Node(id=0 + 3, label="E", level=0, x=1.0, y=1.0).graph_adapter(),
 
         Node(id=0 + 4, label="I", level=0 + 1, x=0.33, y=1.33).graph_adapter(),
         Node(id=0 + 5, label="I", level=0 + 1, x=0.66, y=1.33).graph_adapter(),
@@ -59,17 +59,17 @@ def makeP6():
     ])
 
     graph2.add_edges_from([
-        (0, 0 + 1),
-        (0, 0 + 3),
-        (0 + 2, 0 + 1),
-        (0 + 2, 0 + 3),
-        (0 + 1, 0 + 3),
-
-        (0, 0 + 4),
-        (0, 0 + 5),
-
-        (0 + 2, 0 + 9),
-        (0 + 2, 0 + 10),
+        # (0, 0 + 1),
+        # (0, 0 + 3),
+        # (0 + 2, 0 + 1),
+        # (0 + 2, 0 + 3),
+        # (0 + 1, 0 + 3),
+        #
+        # (0, 0 + 4),
+        # (0, 0 + 5),
+        #
+        # (0 + 2, 0 + 9),
+        # (0 + 2, 0 + 10),
 
         (0 + 4, 0 + 6),
         (0 + 4, 0 + 7),
@@ -96,7 +96,7 @@ def makeP6():
 
 
 if __name__ == '__main__':
-    # makeP6()
-    makeP5()
+    makeP6()
+    # makeP5()
 
     # print(graph._node)

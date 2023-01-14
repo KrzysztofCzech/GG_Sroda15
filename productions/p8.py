@@ -145,7 +145,7 @@ def check_if_subgraph_matches_p8(subgraph: dict, graph: nx.Graph):
             node_2 = graph_nodes.get(node_2_id)
             if node_1['label'] == 'E' and node_1 == node_2:
                 common_nodes = list(set(adj.get(node_1_id)).intersection(adj.get(node_2_id)).intersection(nodes_view))
-                print(f"{common_nodes=}")
+                print(f"{common_nodes}=")
                 if len(common_nodes) != 2:
                     continue
 

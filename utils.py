@@ -1,4 +1,6 @@
 import networkx as nx
+from typing import List, Tuple
+
 from classes import Attr_MAP
 
 
@@ -22,7 +24,7 @@ def find_isomorphic_graph(graph: nx.Graph, left_side_graph: nx.Graph) -> dict:
     return None if len(isomorphic_g) == 0 else isomorphic_g[0]
 
 
-def find_isomorphic_graph_p7_p8(input_graph: nx.Graph, left_side_graph: nx.Graph) -> list[dict]:
+def find_isomorphic_graph_p7_p8(input_graph: nx.Graph, left_side_graph: nx.Graph) -> List[dict]:
     isomorphic_g = []
 
     graphs_found = nx.algorithms.isomorphism.GraphMatcher(
@@ -73,7 +75,7 @@ def update_graph(
     graph.add_edges_from(right_side_edges_mapped)
 
 
-def with_offset(arg: list[tuple[int, int]], offset):
+def with_offset(arg: List[Tuple[int, int]], offset):
     return [(v1+offset, v2+offset) for (v1, v2) in arg]
 
 
@@ -101,3 +103,4 @@ def check_if_is_in_the_middle(left_id, center_id, right_id, tested_nodes):
     x_diff_1 = (left['x'] + right['x']) * 0.5 - center['x']
     y_diff_1 = (left['y'] + right['y']) * 0.5 - center['y']
     return almost_equal(x_diff_1, 0) and almost_equal(y_diff_1, 0)
+
