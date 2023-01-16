@@ -2,6 +2,7 @@ import networkx as nx
 from classes import Node
 import productions.p8 as p8
 from utils import find_isomorphic_graph_p7_p8
+from collections import Counter
 
 
 def make_mock_graph(uid: int, level) -> nx.Graph:
@@ -51,11 +52,11 @@ def make_mock_graph(uid: int, level) -> nx.Graph:
     ])
 
     left_side_graph.add_edges_from([
-        (uid + 17, uid + 10), (uid + 17, uid + 16),(uid + 17, uid + 12),
-        (uid + 7, uid + 11),(uid + 7, uid + 13),(uid + 7, uid + 8),
-        
+        (uid + 17, uid + 10), (uid + 17, uid + 16), (uid + 17, uid + 12),
+        (uid + 7, uid + 11), (uid + 7, uid + 13), (uid + 7, uid + 8),
+
         (uid + 8, uid + 13), (uid + 8, uid + 11), (uid + 8, uid + 14), (uid + 8, uid + 9),
-        (uid + 9, uid + 12), (uid + 9, uid + 15), (uid + 9, uid + 10),(uid + 9, uid + 14), (uid + 9, uid + 11),
+        (uid + 9, uid + 12), (uid + 9, uid + 15), (uid + 9, uid + 10), (uid + 9, uid + 14), (uid + 9, uid + 11),
 
         (uid + 10, uid + 16), (uid + 10, uid + 15), (uid + 10, uid + 12),
         (uid + 16, uid + 12), (uid + 15, uid + 12), (uid + 14, uid + 11), (uid + 13, uid + 11),
@@ -71,7 +72,7 @@ def make_left_side_graph(uid: int, level) -> nx.Graph:
     left_side_graph = nx.Graph()
 
     left_side_graph.add_nodes_from([
-        Node(id=uid, label='el', level=level).graph_adapter()
+        Node(id=uid, label='i', level=level).graph_adapter()
     ])
 
     left_side_graph.add_edges_from([
@@ -106,7 +107,7 @@ def make_left_side_graph(uid: int, level) -> nx.Graph:
     ])
 
     left_side_graph.add_edges_from([
-        (uid + 17, uid + 16), (uid + 17, uid + 12), 
+        (uid + 17, uid + 16), (uid + 17, uid + 12),
         (uid + 7, uid + 11), (uid + 7, uid + 13),
 
         (uid + 9, uid + 14), (uid + 9, uid + 11), (uid + 9, uid + 12), (uid + 9, uid + 15),
@@ -119,50 +120,72 @@ def make_left_side_graph(uid: int, level) -> nx.Graph:
     return left_side_graph
 
 
-def merge_e_nodes(subgraph: dict, graph: nx.Graph):
-    nodes_view = list(subgraph.values())
+def merge_e_nodes(subgraph: dict, graph: nx.Graph, level: int):
+    # nodes_view = list(subgraph.values())
 
     adj = graph._adj
     nodes = graph._node
 
-    el_node = adj.get(nodes_view[0])  # lvl 0 (start)
-
-    i_node_1 = adj.get(list(el_node)[0])  # lvl 1
-    i_node_2 = adj.get(list(el_node)[1])  # lvl 1
-
-    # Should get I node ids: 13 and 16
-    I_node_1_id = list(i_node_1)[-1]
-    I_node_2_id = list(i_node_2)[-2]
-    I_node_1 = adj.get(I_node_1_id)  # lvl 2
-    I_node_2 = adj.get(I_node_2_id)  # lvl 2
+    # el_node = adj.get(nodes_view[0])  # lvl 0 (start)
+    #
+    # i_node_1 = adj.get(list(el_node)[0])  # lvl 1
+    # i_node_2 = adj.get(list(el_node)[1])  # lvl 1
+    #
+    # # Should get I node ids: 13 and 16
+    # I_node_1_id = list(i_node_1)[-1]
+    # I_node_2_id = list(i_node_2)[-2]
+    # I_node_1 = adj.get(I_node_1_id)  # lvl 2
+    # I_node_2 = adj.get(I_node_2_id)  # lvl 2
 
     node_to_remove = None
     node_to_remove_id = None
     node_to_stay = None
     node_to_stay_id = None
 
-    for node_1_id in I_node_1.keys():
-        if node_1_id not in nodes_view:
-            continue
-        node_1 = nodes.get(node_1_id)
-        for node_2_id in I_node_2.keys():
-            if node_1_id == node_2_id or node_2_id not in nodes_view:
-                continue
-            node_2 = nodes.get(node_2_id)
-            if node_1 == node_2:
-                common_nodes = list(set(adj.get(node_1_id)).intersection(adj.get(node_2_id)).intersection(nodes_view))
+    # for node_1_id in I_node_1.keys():
+    #     if node_1_id not in nodes_view:
+    #         continue
+    #     node_1 = nodes.get(node_1_id)
+    #     for node_2_id in I_node_2.keys():
+    #         if node_1_id == node_2_id or node_2_id not in nodes_view:
+    #             continue
+    #         node_2 = nodes.get(node_2_id)
+    #         if node_1 == node_2:
+    #             common_nodes = list(set(adj.get(node_1_id)).intersection(adj.get(node_2_id)).intersection(nodes_view))
+    #
+    #             # Find two identical e nodes with no common nodes
+    #             if common_nodes == []:
+    #                 node_to_remove = node_1
+    #                 node_to_remove_id = node_1_id
+    #                 node_to_stay = node_2
+    #                 node_to_stay_id = node_2_id
 
-                print(f"{common_nodes=}")
-                # Find two identical e nodes with no common nodes
-                if common_nodes == []:
-                    node_to_remove = node_1
-                    node_to_remove_id = node_1_id
-                    node_to_stay = node_2
-                    node_to_stay_id = node_2_id
+    e_nodes_x_y = list(
+        map(
+            lambda node: (node['x'], node['y']),
+            filter(
+                lambda node: node['label'] == 'E' and node['level'] == level + 2,
+                nodes.values()
+            )
+        )
+    )
+
+    for coords, count in Counter(e_nodes_x_y).items():
+        if count == 2:
+            match = list(filter(
+                lambda node: node[1]['label'] == 'E' and
+                             node[1]['level'] == level + 2 and
+                             node[1]['x'] == coords[0] and
+                             node[1]['y'] == coords[1],
+                nodes.items()
+            ))
+            node_to_stay_id = match[0][0]
+            node_to_remove_id = match[1][0]
+            break
 
     if node_to_remove_id is not None and node_to_stay_id is not None:
-        print(f"Node to remove {node_to_remove_id}: {node_to_remove}")
-        print(f"Node to stay {node_to_stay_id}: {node_to_stay}")
+        # print(f"Node to remove {node_to_remove_id}: {node_to_remove}")
+        # print(f"Node to stay {node_to_stay_id}: {node_to_stay}")
         removed_node_neighbours = adj.get(node_to_remove_id)
         print(f"Neighbours of the node to remove: {list(removed_node_neighbours)}")
         for lonely_neighbour_id in list(removed_node_neighbours):
@@ -175,11 +198,11 @@ def merge_e_nodes(subgraph: dict, graph: nx.Graph):
         return None
 
 
-def check_if_e_node_can_be_merged(subgraphs, graph: nx.Graph):
+def check_if_e_node_can_be_merged(subgraphs, graph: nx.Graph, level):
     if not subgraphs:
         return None
     for subgraph in subgraphs:
-        merged_graph = merge_e_nodes(subgraph, graph)
+        merged_graph = merge_e_nodes(subgraph, graph, level)
         if merged_graph is not None:
             return merged_graph
     return None
@@ -189,7 +212,7 @@ def p7(graph: nx.Graph, level: int):
     unique_id = 777
     left_graph = make_left_side_graph(unique_id, level)
     isomorphic_mappings = find_isomorphic_graph_p7_p8(graph, left_graph)
-    transformed_graph = check_if_e_node_can_be_merged(isomorphic_mappings, graph)
+    transformed_graph = check_if_e_node_can_be_merged(isomorphic_mappings, graph, level)
 
     if transformed_graph is None:
         print("Unsuccessful merging. Cannot continue with the production")
